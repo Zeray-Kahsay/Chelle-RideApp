@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chelle.API", "Chelle.API\Chelle.API.csproj", "{68354E82-06C4-4EC5-BC45-ACB775C7D944}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chelle.Core", "Chelle.Core\Chelle.Core.csproj", "{75CDE47B-D2EB-435C-9E77-BF06FBB78D03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chelle.Infrastructure", "Chelle.Infrastructure\Chelle.Infrastructure.csproj", "{5CC857A0-CCA1-4097-895A-36B72D90586F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68354E82-06C4-4EC5-BC45-ACB775C7D944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68354E82-06C4-4EC5-BC45-ACB775C7D944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68354E82-06C4-4EC5-BC45-ACB775C7D944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68354E82-06C4-4EC5-BC45-ACB775C7D944}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75CDE47B-D2EB-435C-9E77-BF06FBB78D03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75CDE47B-D2EB-435C-9E77-BF06FBB78D03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75CDE47B-D2EB-435C-9E77-BF06FBB78D03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75CDE47B-D2EB-435C-9E77-BF06FBB78D03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CC857A0-CCA1-4097-895A-36B72D90586F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CC857A0-CCA1-4097-895A-36B72D90586F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CC857A0-CCA1-4097-895A-36B72D90586F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CC857A0-CCA1-4097-895A-36B72D90586F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
