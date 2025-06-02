@@ -5,9 +5,9 @@ namespace Chelle.Core.Interfaces;
 
 public interface IUserRepository
 {
-  Task<User> GetUserByIdAsync(Guid userId);
-  Task<IEnumerable<User>> GetAllUsersAsync();
-  Task<User> AddUserAsync(User user);
-  Task<User> UpdateUserAsync(User user);
+  Task<AppUser> GetUserByIdAsync(Guid userId);
+  Task<IEnumerable<AppUser>> GetAllUsersAsync();
+  Task<AppUser> AddUserAsync(AppUser user);
+  Task<AppUser> UpdateUserAsync(AppUser user);
 
 }

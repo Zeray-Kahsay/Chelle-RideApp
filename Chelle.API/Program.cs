@@ -1,10 +1,13 @@
 using System.Text;
 using Chelle.API.Services;
 using Chelle.Core.Interfaces;
+using Chelle.Core.Services;
 using Chelle.Infrastructure.Data;
 using Chelle.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Resend; // Add this using directive for Resend.Net
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,9 +40,24 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+// Resend email 
+builder.Services.AddOptions();
+builder.Services.AddHttpClient<ResendClient>();
+builder.Services.Configure<ResendClientOptions>(opt =>
+{
+    opt.ApiToken = Environment.GetEnvironmentVariable("ResendEmailSettings")!;
+    if (string.IsNullOrEmpty(opt.ApiToken))
+    {
+        throw new InvalidOperationException("Resend API Token is not configured.");
+    }
+
+});
+
+
 // DI
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddTransient<IResendEmailSender, ResendEmailSender>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

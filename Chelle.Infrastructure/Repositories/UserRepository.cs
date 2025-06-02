@@ -7,33 +7,30 @@ namespace Chelle.Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
-  /// <summary>
-  /// Represents the application's database context used for accessing and managing entities within the database.
-  /// </summary>
   private readonly AppDbContext _context;
   public UserRepository(AppDbContext context)
   {
     _context = context ?? throw new ArgumentNullException(nameof(context));
   }
-  public async Task<User> GetUserByIdAsync(Guid userId)
+  public async Task<AppUser> GetUserByIdAsync(Guid userId)
   {
     if (userId == Guid.Empty)
     {
-      throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+      throw new ArgumentException("AppUser ID cannot be empty.", nameof(userId));
     }
 
     return await _context.Users.FindAsync(userId)
-           ?? throw new KeyNotFoundException($"User with ID {userId} not found.");
+           ?? throw new KeyNotFoundException($"AppUser with ID {userId} not found.");
   }
-  public async Task<IEnumerable<User>> GetAllUsersAsync()
+  public async Task<IEnumerable<AppUser>> GetAllUsersAsync()
   {
     return await _context.Users.ToListAsync();
   }
-  public async Task<User> AddUserAsync(User user)
+  public async Task<AppUser> AddUserAsync(AppUser user)
   {
     if (user == null)
     {
-      throw new ArgumentNullException(nameof(user), "User cannot be null.");
+      throw new ArgumentNullException(nameof(user), "AppUser cannot be null.");
     }
 
     _context.Users.Add(user);
@@ -41,14 +38,14 @@ public class UserRepository : IUserRepository
     return user;
   }
 
-  public async Task<User> UpdateUserAsync(User user)
+  public async Task<AppUser> UpdateUserAsync(AppUser user)
   {
     if (user == null)
     {
-      throw new ArgumentNullException(nameof(user), "User cannot be null.");
+      throw new ArgumentNullException(nameof(user), "AppUser cannot be null.");
     }
 
-    var existingUser = await _context.Users.FindAsync(user.Id) ?? throw new KeyNotFoundException($"User with ID {user.Id} not found.");
+    var existingUser = await _context.Users.FindAsync(user.Id) ?? throw new KeyNotFoundException($"AppUser with ID {user.Id} not found.");
     _context.Entry(existingUser).CurrentValues.SetValues(user);
     await _context.SaveChangesAsync();
     return existingUser;

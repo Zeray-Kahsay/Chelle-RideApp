@@ -37,11 +37,11 @@ public class UserController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<IActionResult> AddUser([FromBody] User user)
+  public async Task<IActionResult> AddUser([FromBody] AppUser user)
   {
     if (user == null)
     {
-      return BadRequest("User cannot be null.");
+      return BadRequest("AppUser cannot be null.");
     }
 
     var createdUser = await _userRepository.AddUserAsync(user);
@@ -49,12 +49,12 @@ public class UserController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<IActionResult> UpdateUser(Guid id, [FromBody] User user)
+  public async Task<IActionResult> UpdateUser(Guid id, [FromBody] AppUser user)
   {
-    if (user == null || user.Id != id)
-    {
-      return BadRequest("Invalid user data.");
-    }
+    // if (user == null || user.Id != id)
+    // {
+    //   return BadRequest("Invalid user data.");
+    // }
 
     try
     {

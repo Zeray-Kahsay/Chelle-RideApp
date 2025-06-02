@@ -10,11 +10,11 @@ public class TokenService
 {
   private readonly IConfiguration _configuration;
   public TokenService(IConfiguration configuration) => _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-  public string GenerateToken(User user)
+  public string GenerateToken(AppUser user)
   {
     if (user == null)
     {
-      throw new ArgumentNullException(nameof(user), "User cannot be null.");
+      throw new ArgumentNullException(nameof(user), "AppUser cannot be null.");
     }
 
     var claims = new List<Claim>()

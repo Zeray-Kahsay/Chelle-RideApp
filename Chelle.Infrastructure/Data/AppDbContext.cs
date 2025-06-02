@@ -7,7 +7,7 @@ namespace Chelle.Infrastructure.Data;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
 
-  public DbSet<User> Users { get; set; }
+  public DbSet<AppUser> Users { get; set; }
 
 
 
@@ -18,5 +18,5 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
   }
 
   // Define DbSets for your entities
-  // public DbSet<User> Users { get; set; }
+  // public DbSet<AppUser> Users { get; set; }
 }
