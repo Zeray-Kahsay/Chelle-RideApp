@@ -3,10 +3,12 @@ using Chelle.API.Services;
 using Chelle.Core.Interfaces;
 using Chelle.Core.Services;
 using Chelle.Infrastructure.Data;
+using Chelle.Infrastructure.Identity;
 using Chelle.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Resend; // Add this using directive for Resend.Net
+using Resend;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,17 +43,27 @@ builder.Services.AddAuthentication("Bearer")
     });
 
 // Resend email 
-builder.Services.AddOptions();
 builder.Services.AddHttpClient<ResendClient>();
 builder.Services.Configure<ResendClientOptions>(opt =>
 {
-    opt.ApiToken = Environment.GetEnvironmentVariable("ResendEmailSettings")!;
-    if (string.IsNullOrEmpty(opt.ApiToken))
-    {
-        throw new InvalidOperationException("Resend API Token is not configured.");
-    }
-
+    opt.ApiToken = builder.Configuration["ResendEmailSettings:ApiKey"]
+        ?? throw new InvalidOperationException("Resend API Token is not configured.");
 });
+
+//Identity Framework Core
+builder.Services.AddIdentity<AppUser, AppRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.SignIn.RequireConfirmedPhoneNumber = true;
+}).AddRoles<AppRole>()
+  .AddRoleManager<RoleManager<AppRole>>()
+  .AddSignInManager<SignInManager<AppUser>>()
+  .AddEntityFrameworkStores<AppDbContext>()
+  .AddDefaultTokenProviders();
 
 
 // DI

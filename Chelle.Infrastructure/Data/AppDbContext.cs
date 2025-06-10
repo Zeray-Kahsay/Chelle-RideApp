@@ -1,5 +1,4 @@
-using System;
-using Chelle.Core.Entities;
+using Chelle.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chelle.Infrastructure.Data;
@@ -17,6 +16,4 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     base.OnModelCreating(modelBuilder);
   }
 
-  // Define DbSets for your entities
-  // public DbSet<AppUser> Users { get; set; }
 }

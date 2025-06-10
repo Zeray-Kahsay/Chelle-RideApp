@@ -9,13 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chelle.Core", "Chelle.Core\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chelle.Infrastructure", "Chelle.Infrastructure\Chelle.Infrastructure.csproj", "{5CC857A0-CCA1-4097-895A-36B72D90586F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chelle.Application", "Chelle.Application.Contracts\Chelle.Application.csproj", "{3872877F-1A65-49EA-BFB4-769F2F38A4DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{68354E82-06C4-4EC5-BC45-ACB775C7D944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +29,12 @@ Global
 		{5CC857A0-CCA1-4097-895A-36B72D90586F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CC857A0-CCA1-4097-895A-36B72D90586F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CC857A0-CCA1-4097-895A-36B72D90586F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3872877F-1A65-49EA-BFB4-769F2F38A4DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3872877F-1A65-49EA-BFB4-769F2F38A4DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3872877F-1A65-49EA-BFB4-769F2F38A4DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3872877F-1A65-49EA-BFB4-769F2F38A4DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

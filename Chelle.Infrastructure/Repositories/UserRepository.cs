@@ -1,6 +1,6 @@
 using Chelle.Core.Entities;
-using Chelle.Core.Interfaces;
 using Chelle.Infrastructure.Data;
+using Chelle.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chelle.Infrastructure.Repositories;
@@ -12,42 +12,53 @@ public class UserRepository : IUserRepository
   {
     _context = context ?? throw new ArgumentNullException(nameof(context));
   }
-  public async Task<AppUser> GetUserByIdAsync(Guid userId)
+  public async Task<User> GetUserByPhoneAsync(string phoneNumber)
   {
-    if (userId == Guid.Empty)
+    if (string.IsNullOrWhiteSpace(phoneNumber))
     {
-      throw new ArgumentException("AppUser ID cannot be empty.", nameof(userId));
+      throw new ArgumentException("Phone number cannot be null or empty.", nameof(phoneNumber));
     }
+    var user = await _context.Users
+                             .FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber)
+                             ?? throw new KeyNotFoundException($"User with phone number {phoneNumber} not found.");
+    return user.ToUserDomain();
 
-    return await _context.Users.FindAsync(userId)
-           ?? throw new KeyNotFoundException($"AppUser with ID {userId} not found.");
   }
-  public async Task<IEnumerable<AppUser>> GetAllUsersAsync()
+  public async Task<IEnumerable<User>> GetAllUsersAsync()
   {
-    return await _context.Users.ToListAsync();
+    var users = await _context.Users.ToListAsync();
+
+    if (users.Count > 0)
+    {
+      return users.Select(u => u.ToUserDomain());
+    }
+    else
+    {
+      throw new KeyNotFoundException("No users found.");
+    }
   }
-  public async Task<AppUser> AddUserAsync(AppUser user)
+  public async Task<User> AddUserAsync(User user)
   {
     if (user == null)
     {
-      throw new ArgumentNullException(nameof(user), "AppUser cannot be null.");
+      throw new ArgumentNullException(nameof(user), "User cannot be null.");
     }
 
-    _context.Users.Add(user);
+    _context.Users.Add(user.ToAppUser());
     await _context.SaveChangesAsync();
     return user;
   }
 
-  public async Task<AppUser> UpdateUserAsync(AppUser user)
+  public async Task<User> UpdateUserAsync(User user)
   {
     if (user == null)
     {
-      throw new ArgumentNullException(nameof(user), "AppUser cannot be null.");
+      throw new ArgumentNullException(nameof(user), "User cannot be null.");
     }
 
-    var existingUser = await _context.Users.FindAsync(user.Id) ?? throw new KeyNotFoundException($"AppUser with ID {user.Id} not found.");
+    var existingUser = await _context.Users.FindAsync(user.Id) ?? throw new KeyNotFoundException($"User with ID {user.Id} not found.");
     _context.Entry(existingUser).CurrentValues.SetValues(user);
     await _context.SaveChangesAsync();
-    return existingUser;
+    return existingUser.ToUserDomain();
   }
 }
