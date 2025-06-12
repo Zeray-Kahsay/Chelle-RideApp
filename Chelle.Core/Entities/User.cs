@@ -8,6 +8,7 @@ public record User
   public string FirstName { get; private set; }
   public string LastName { get; private set; }
   public string PhoneNumber { get; private set; }
+  public string Email { get; set; } = string.Empty;
 
   public bool IsVerified { get; private set; }
   public bool CanManageRides { get; private set; }

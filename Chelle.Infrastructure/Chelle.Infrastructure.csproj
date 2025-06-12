@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\Chelle.Application.Contracts\Chelle.Application.csproj" />
     <ProjectReference Include="..\Chelle.Core\Chelle.Core.csproj" />
   </ItemGroup>
 

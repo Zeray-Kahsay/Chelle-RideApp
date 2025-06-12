@@ -19,9 +19,9 @@ public class TokenService
 
     var claims = new List<Claim>()
     {
-      new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+      new(JwtRegisteredClaimNames.Sub, user.Id),
       new(JwtRegisteredClaimNames.NameId, user.Email),
-      new(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+      new(JwtRegisteredClaimNames.PhoneNumber, user.PhoneNumber),
     };
 
     var secretKey = _configuration["JwtSettings:SecretKey"];

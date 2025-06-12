@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Chelle.Application.Contracts\Chelle.Application.csproj" />
     <ProjectReference Include="..\Chelle.Core\Chelle.Core.csproj" />
     <ProjectReference Include="..\Chelle.Infrastructure\Chelle.Infrastructure.csproj" />
   </ItemGroup>

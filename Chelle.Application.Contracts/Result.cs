@@ -1,4 +1,4 @@
-namespace Chelle.Application.Contracts;
+namespace Chelle.Application;
 
 public record Result<T>
 {
