@@ -24,6 +24,12 @@ public class UserRepository : IUserRepository
     return user.ToUserDomain();
 
   }
+  public async Task<User> GetUserByIdAsync(int id)
+  {
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id)
+                                    ?? throw new KeyNotFoundException($"User with user id {id} not found");
+    return user.ToUserDomain();
+  }
   public async Task<IEnumerable<User>> GetAllUsersAsync()
   {
     var users = await _context.Users.ToListAsync();
@@ -61,4 +67,5 @@ public class UserRepository : IUserRepository
     await _context.SaveChangesAsync();
     return existingUser.ToUserDomain();
   }
+
 }

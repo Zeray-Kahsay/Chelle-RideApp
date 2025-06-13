@@ -1,5 +1,5 @@
-using Chelle.Core.Entities;
-using Chelle.Core.Interfaces;
+using Chelle.Infrastructure.Extensions;
+using Chelle.Infrastructure.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chelle.API.Controllers;
@@ -16,7 +16,7 @@ public class UserController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<IActionResult> GetUserById(Guid id)
+  public async Task<IActionResult> GetUserById(int id)
   {
     try
     {
@@ -44,21 +44,21 @@ public class UserController : ControllerBase
       return BadRequest("AppUser cannot be null.");
     }
 
-    var createdUser = await _userRepository.AddUserAsync(user);
+    var createdUser = await _userRepository.AddUserAsync(user.ToUserDomain());
     return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
   }
 
   [HttpPut("{id}")]
-  public async Task<IActionResult> UpdateUser(Guid id, [FromBody] AppUser user)
+  public async Task<IActionResult> UpdateUser(int id, [FromBody] AppUser user)
   {
-    // if (user == null || user.Id != id)
-    // {
-    //   return BadRequest("Invalid user data.");
-    // }
+    if (user == null || user.Id != id)
+    {
+      return BadRequest("Invalid user data.");
+    }
 
     try
     {
-      var updatedUser = await _userRepository.UpdateUserAsync(user);
+      var updatedUser = await _userRepository.UpdateUserAsync(user.ToUserDomain());
       return Ok(updatedUser);
     }
     catch (KeyNotFoundException)

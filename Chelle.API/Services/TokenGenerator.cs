@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Chelle.Core.Entities;
+using Chelle.Infrastructure.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Chelle.API.Services;
@@ -19,9 +19,9 @@ public class TokenService
 
     var claims = new List<Claim>()
     {
-      new(JwtRegisteredClaimNames.Sub, user.Id),
-      new(JwtRegisteredClaimNames.NameId, user.Email),
-      new(JwtRegisteredClaimNames.PhoneNumber, user.PhoneNumber),
+      new(JwtRegisteredClaimNames.Name, user.FirstName),
+      new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+      new(JwtRegisteredClaimNames.PhoneNumber, user.PhoneNumber ?? string.Empty),
     };
 
     var secretKey = _configuration["JwtSettings:SecretKey"];

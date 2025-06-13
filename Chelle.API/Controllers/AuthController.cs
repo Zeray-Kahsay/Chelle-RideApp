@@ -1,6 +1,6 @@
 using Chelle.API.Services;
-using Chelle.Core.Entities;
-using Chelle.Core.Interfaces;
+using Chelle.Infrastructure.Extensions;
+using Chelle.Infrastructure.Identity;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
       .FirstOrDefault(u => u.Email == payload.Email);
     if (user == null)
     {
-      user = new AppUser
+      var appUser = new AppUser
       {
         FirstName = payload.GivenName,
         LastName = payload.FamilyName,
@@ -42,11 +42,11 @@ public class AuthController : ControllerBase
 
 
       };
-      user = await _userRepository.AddUserAsync(user);
+      user = await _userRepository.AddUserAsync(appUser.ToUserDomain());
     }
 
     // Generate JWT token
-    var jwtToken = _tokenService.GenerateToken(user);
+    var jwtToken = _tokenService.GenerateToken(user.ToAppUser());
     return Ok(new
     {
       Token = jwtToken,

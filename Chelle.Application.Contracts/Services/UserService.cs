@@ -2,6 +2,8 @@
 using Chelle.Application.Contracts.RequestDTOs;
 using Chelle.Application.Contracts.ResponseDTOs;
 using Chelle.Application.Interfaces;
+using Chelle.Infrastructure.Extensions;
+
 
 namespace Chelle.Application.Services;
 
@@ -22,7 +24,7 @@ public class UserService : IUserservice
 
     var user = await _repo.GetUserByPhoneAsync(phoneNumber);
     return user is null ? Result<UserResponse>.Failure("User not found")
-                        : Result<UserResponse>.Success(user.ToUserResponse()); // Assuming ToUserResponse is an extension method that maps User to UserResponse
+                        : Result<UserResponse>.Success(user.ToUserResponse());
 
   }
 
