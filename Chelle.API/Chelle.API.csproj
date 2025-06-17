@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Chelle.Infrastructure\Chelle.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

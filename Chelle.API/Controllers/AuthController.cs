@@ -1,4 +1,4 @@
-using Chelle.API.Services;
+using Chelle.Application.Services;
 using Chelle.Infrastructure.Extensions;
 using Chelle.Infrastructure.Identity;
 using Google.Apis.Auth;
@@ -11,9 +11,9 @@ namespace Chelle.API.Controllers;
 public class AuthController : ControllerBase
 {
   private readonly IUserRepository _userRepository;
-  private readonly TokenService _tokenService;
+  private readonly ITokenService _tokenService;
 
-  public AuthController(IUserRepository userRepository, TokenService tokenService)
+  public AuthController(IUserRepository userRepository, ITokenService tokenService)
   {
     _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
     _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
@@ -30,11 +30,12 @@ public class AuthController : ControllerBase
     }
 
     //Lookup or create user
+    var appUser = new AppUser();
     var user = (await _userRepository.GetAllUsersAsync())
       .FirstOrDefault(u => u.Email == payload.Email);
     if (user == null)
     {
-      var appUser = new AppUser
+      appUser = new AppUser
       {
         FirstName = payload.GivenName,
         LastName = payload.FamilyName,
@@ -45,11 +46,13 @@ public class AuthController : ControllerBase
       user = await _userRepository.AddUserAsync(appUser.ToUserDomain());
     }
 
+    //TODO LATER
+
     // Generate JWT token
-    var jwtToken = _tokenService.GenerateToken(user.ToAppUser());
+    //var jwtToken = _tokenService.GenerateTokenAsync(appUser.ToTokenUserDto(user.Roles));
     return Ok(new
     {
-      Token = jwtToken,
+      //Token = jwtToken,
       AppUser = new
       {
         user.Id,

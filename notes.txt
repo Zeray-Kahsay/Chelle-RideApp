@@ -1,0 +1,12 @@
+Ride.Application
+├── Services
+│   └── AccountService.cs
+├── Mappers
+│   └── UserMapper.cs      <-- Domain ↔ DTO
+
+Ride.Infrastructure
+├── Identity
+│   ├── Models
+│   │   └── ApplicationUser.cs
+│   └── Mappers
+│       └── ApplicationUserMapper.cs <-- DTO ↔ Identity model

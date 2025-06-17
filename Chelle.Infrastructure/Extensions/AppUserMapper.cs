@@ -1,4 +1,5 @@
 using System;
+using Chelle.Application.Contracts.AuthDto;
 using Chelle.Core.Entities;
 using Chelle.Infrastructure.Identity;
 
@@ -46,6 +47,23 @@ public static class AppUserMapper
       user.IsVerified,
       user.CanManageRides
 
+    );
+  }
+
+  public static TokenUserDto ToTokenUserDto(this AppUser user, IEnumerable<string> roles)
+  {
+    if (user == null)
+    {
+      throw new ArgumentNullException(nameof(user), "User cannot be null.");
+    }
+
+    return new TokenUserDto(
+      user.Id,
+      user.FirstName,
+      user.LastName,
+      user.PhoneNumber ?? string.Empty,
+      user.Email ?? string.Empty,
+      roles.FirstOrDefault() ?? string.Empty
     );
   }
 

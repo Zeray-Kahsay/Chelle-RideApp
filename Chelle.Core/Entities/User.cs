@@ -28,6 +28,16 @@ public record User
   public static User CreateNewUser(int id, string firstName, string lastName, string phoneNumber) =>
      new(id, firstName, lastName, phoneNumber);
 
+  // Logic to update user details
+  public void UpdateFromRequest(string firstName, string lastName, string phoneNumber, string email = "")
+  {
+    if (!string.IsNullOrWhiteSpace(firstName)) FirstName = firstName;
+    if (!string.IsNullOrWhiteSpace(lastName)) LastName = lastName;
+    if (!string.IsNullOrWhiteSpace(phoneNumber)) PhoneNumber = phoneNumber;
+    if (!string.IsNullOrWhiteSpace(email)) Email = email;
+
+  }
+
 
   // Factory method for internal or mapping use
   public static User UserFromDb(int id, string firstName, string lastName, string phoneNumber, bool isVerified, bool canManageRides) =>

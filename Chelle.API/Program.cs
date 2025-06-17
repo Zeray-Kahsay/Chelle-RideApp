@@ -1,10 +1,11 @@
 using System.Text;
-using Chelle.API.Services;
-using Chelle.Core.Interfaces;
+using Chelle.Application.Services;
 using Chelle.Core.Services;
+using Chelle.Infrastructure.Auth;
 using Chelle.Infrastructure.Data;
 using Chelle.Infrastructure.Identity;
 using Chelle.Infrastructure.Repositories;
+using Chelle.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,12 +22,19 @@ builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
 //Jwt Authentication
+builder.Services.AddOptions<JwtSettings>()
+     .Bind(builder.Configuration.GetSection("JwtSettings"))
+     .Validate(s =>
+                    !string.IsNullOrWhiteSpace(s.SecretKey) &&
+                    !string.IsNullOrWhiteSpace(s.Issuer) &&
+                    !string.IsNullOrWhiteSpace(s.Audience) &&
+                    s.ExpirationMinutes > 0,
+                    "Invalid JWT settings")
+        .ValidateOnStart();// throws on app start if validation fails
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["SecretKey"];
-if (string.IsNullOrEmpty(secretKey))
-{
-    throw new InvalidOperationException("JWT SecretKey is not configured.");
-}
+var secretKey = jwtSettings["SecretKey"]
+    ?? throw new InvalidOperationException("JWT Secret Key is not configured.");
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -68,7 +76,8 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
 
 // DI
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<IResendEmailSender, ResendEmailSender>();
 
 // Add services to the container.

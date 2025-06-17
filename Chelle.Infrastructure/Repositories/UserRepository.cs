@@ -1,3 +1,4 @@
+using Chelle.Application.Contracts.RequestDTOs;
 using Chelle.Core.Entities;
 using Chelle.Infrastructure.Data;
 using Chelle.Infrastructure.Extensions;
@@ -68,4 +69,27 @@ public class UserRepository : IUserRepository
     return existingUser.ToUserDomain();
   }
 
+  public Task<bool> DeleteUserAsync(string phoneNumber)
+  {
+
+    if (string.IsNullOrWhiteSpace(phoneNumber))
+    {
+      throw new ArgumentException("Phone number cannot be null or empty.", nameof(phoneNumber));
+    }
+    return _context.Users
+                   .Where(u => u.PhoneNumber == phoneNumber)
+                   .Select(u => new { u.Id, u.PhoneNumber })
+                   .ExecuteDeleteAsync()
+                   .ContinueWith(task =>
+                   {
+                     if (task.Result > 0)
+                     {
+                       return true;
+                     }
+                     else
+                     {
+                       throw new KeyNotFoundException($"User with phone number {phoneNumber} not found.");
+                     }
+                   });
+  }
 }
