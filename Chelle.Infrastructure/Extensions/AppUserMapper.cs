@@ -1,5 +1,6 @@
 using System;
 using Chelle.Application.Contracts.AuthDto;
+using Chelle.Application.Contracts.RequestDTOs;
 using Chelle.Core.Entities;
 using Chelle.Infrastructure.Identity;
 
@@ -63,8 +64,27 @@ public static class AppUserMapper
       user.LastName,
       user.PhoneNumber ?? string.Empty,
       user.Email ?? string.Empty,
-      roles.FirstOrDefault() ?? string.Empty
+      roles.FirstOrDefault() ?? string.Empty,
+      user.Token ?? string.Empty,
+      user.PhoneNumberConfirmed
+
     );
   }
 
+  public static IdentityUserModel MapToIdentityModel(this AppUser user)
+  {
+    if (user == null)
+    {
+      throw new ArgumentNullException(nameof(user), "User cannot be null.");
+    }
+
+    return new IdentityUserModel
+    {
+      FirstName = user.FirstName,
+      LastName = user.LastName,
+      PhoneNumber = user.PhoneNumber ?? string.Empty,
+      Email = user.Email ?? string.Empty,
+
+    };
+  }
 }

@@ -1,3 +1,4 @@
+using Chelle.Application.Contracts.RequestDTOs;
 using Chelle.Application.Contracts.ResponseDTOs;
 using Chelle.Core.Entities;
 
@@ -20,6 +21,25 @@ public static class UserMapper
       Email = user.Email,
       IsVerified = user.IsVerified,
       CanManageRides = user.CanManageRides
+    };
+  }
+
+  public static UserResponse MapToUserResponse(this IdentityUserModel user)
+  {
+    if (user == null)
+    {
+      throw new ArgumentNullException(nameof(user), "User cannot be null.");
+    }
+    return new UserResponse
+    {
+      UserId = user.UserId,
+      PhoneNumber = user.PhoneNumber,
+      FirstName = user.FirstName,
+      LastName = user.LastName,
+      Email = user.Email,
+      Role = user.Role ?? string.Empty,
+      Token = user.Token ?? string.Empty,
+
     };
   }
 }

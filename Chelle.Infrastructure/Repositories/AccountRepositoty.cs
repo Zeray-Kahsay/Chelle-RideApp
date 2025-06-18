@@ -1,5 +1,6 @@
 using Chelle.Application.Contracts.RequestDTOs;
 using Chelle.Application.Interfaces;
+using Chelle.Infrastructure.Extensions;
 using Chelle.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -38,10 +39,10 @@ public class AccountRepositoty : IAccountRepository
     public async Task<IdentityUserModel?> FindUserByPhoneAsync(string phoneNumber)
     {
         var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
-        return user is null ? null : MapToModel(user);
+        return user is null ? null : user.MapToIdentityModel();
 
     }
-    public async Task<bool> CheckPasswordAsync(string phoneNumber, string password)
+    public async Task<bool> CheckUserPasswordAsync(string phoneNumber, string password)
     {
         var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         return user is not null && await _userManager.CheckPasswordAsync(user, password);
@@ -58,10 +59,12 @@ public class AccountRepositoty : IAccountRepository
         var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         if (user is null)
         {
-            return false; // User not found
+            return false;
         }
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+
         var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
         return result.Succeeded;
     }
@@ -71,10 +74,9 @@ public class AccountRepositoty : IAccountRepository
         var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         if (user is null)
         {
-            return false; // User not found
+            return false;
         }
 
-        // Assuming verificationCode is a valid token for phone number confirmation
         var result = await _userManager.VerifyChangePhoneNumberTokenAsync(user, verificationCode, phoneNumber);
         if (result)
         {
@@ -84,13 +86,5 @@ public class AccountRepositoty : IAccountRepository
         return result;
     }
 
-    private static IdentityUserModel MapToModel(AppUser user) =>
-        new()
-        {
-            PhoneNumber = user.PhoneNumber ?? string.Empty,
-            FirstName = user.FirstName ?? string.Empty,
-            LastName = user.LastName ?? string.Empty,
-            Email = user.Email ?? string.Empty,
-            Role = string.Empty // Role will be set later if needed
-        };
+
 }

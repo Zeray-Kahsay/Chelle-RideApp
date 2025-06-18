@@ -1,16 +1,21 @@
 using Chelle.Application.Contracts.RequestDTOs;
 using Chelle.Application.Contracts.ResponseDTOs;
 using Chelle.Application.Interfaces;
+using Chelle.Core.Common;
+using Chelle.Infrastructure.Extensions;
 
 namespace Chelle.Application.Services;
 
 public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
-    public AccountService(IAccountRepository accountRepository)
+    private readonly ITokenService _tokenService;
+    public AccountService(IAccountRepository accountRepository, ITokenService tokenService)
     {
         _accountRepository = accountRepository;
+        _tokenService = tokenService;
     }
+
 
 
     public async Task<Result<UserResponse>> RegisterUserAsync(RegisterUserRequest request)
@@ -35,20 +40,8 @@ public class AccountService : IAccountService
             return Result<UserResponse>.Failure("User registration failed: " + string.Join(", ", identityResult.Errors.Select(e => e.Description)));
         }
 
+        var userResponse = identityUserModel.MapToUserResponse();
 
-        // var userResponse = new UserResponse
-        // {
-        //     PhoneNumber = identityUserModel.PhoneNumber,
-        //     FirstName = identityUserModel.FirstName,
-        //     LastName = identityUserModel.LastName,
-        //     Email = identityUserModel.Email,
-        //     Role = identityUserModel.Role
-        // };
-
-        var userResponse = MapToUserResponse(identityUserModel);
-        //userResponse.IsVerified = false; // Default to false, can be updated later
-        //userResponse.CanManageRides = false; // Default to false, can be updated later
-        //userResponse.UserId = 0; // Assuming UserId is not set during registration, can be updated later
         return Result<UserResponse>.Success(userResponse);
     }
 
@@ -61,66 +54,57 @@ public class AccountService : IAccountService
             return Result<UserResponse>.Failure("User not found.");
         }
 
-        var isPasswordValid = await _accountRepository.CheckPasswordAsync(request.PhoneNumber, request.Password);
-        if (!isPasswordValid)
-        {
-            return Result<UserResponse>.Failure("Invalid password.");
-        }
-
         // check if the user is verified
         if (!user.PhoneNumberConfirmed)
         {
             return Result<UserResponse>.Failure("User phone number is not verified.");
         }
 
+        var isPasswordValid = await _accountRepository.CheckUserPasswordAsync(request.PhoneNumber, request.Password);
+        if (!isPasswordValid)
+        {
+            return Result<UserResponse>.Failure("Invalid password.");
+        }
 
-        var userResponse = MapToUserResponse(user);
-        //userResponse.IsVerified = true; // Assuming user is verified upon login
-        //userResponse.CanManageRides = true; // Assuming user can manage rides upon login
-        //userResponse.UserId = 0; // Assuming UserId is not set during login, can be updated later
+        // Generate JWT token
+        var token = await _tokenService.GenerateTokenAsync(user);
+        if (string.IsNullOrEmpty(token))
+        {
+            return Result<UserResponse>.Failure("Failed to generate token.");
+        }
+        user.Token = token;
+
+        var userResponse = user.MapToUserResponse();
 
         return Result<UserResponse>.Success(userResponse);
     }
 
-
-    public Task<Result<bool>> AddToRoleAsync(string phoneNumber, string roleName)
+    public async Task<Result<bool>> ResetPasswordAsync(ResetPasswordRequest request)
     {
-        throw new NotImplementedException();
-    }
+        var user = await _accountRepository.FindUserByPhoneAsync(request.PhoneNumber);
+        if (user is null) return Result<bool>.Failure("User not found.");
 
-    public Task<Result<bool>> CheckPasswordAsync(string phoneNumber, string password)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Result<IList<string>>> GetRolesAsync(string phoneNumber)
-    {
-        throw new NotImplementedException();
-    }
-
-
-    public Task<Result<bool>> ResetPasswordAsync(ResetPasswordRequest request)
-    {
-        throw new NotImplementedException();
-    }
-
-
-    public Task<Result<bool>> VerifyPhoneAsync(string phoneNumber, string verificationCode)
-    {
-        throw new NotImplementedException();
-    }
-
-    private static UserResponse MapToUserResponse(IdentityUserModel user)
-    {
-        return new UserResponse
+        // check if the usrer is verified
+        if (!user.PhoneNumberConfirmed)
         {
-            PhoneNumber = user.PhoneNumber,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-            Role = user.Role ?? string.Empty, // Handle null role
+            return Result<bool>.Failure("User phone number is not verified.");
+        }
 
-        };
+        // Check for code verification
+        var isCodeValid = await _accountRepository.VerifyPhoneAsync(request.PhoneNumber, request.VerificationCode);
+        if (!isCodeValid)
+        {
+            return Result<bool>.Failure("Invalid verification code.");
+        }
+
+        // Reset the password
+        var resetSuccess = await _accountRepository.ResetPasswordAsync(request.PhoneNumber, request.NewPassword);
+
+        return resetSuccess
+            ? Result<bool>.Success(true)
+            : Result<bool>.Failure("Password reset failed: ");
+
+
     }
 }
 

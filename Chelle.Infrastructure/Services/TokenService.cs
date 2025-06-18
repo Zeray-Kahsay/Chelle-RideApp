@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Chelle.Application.Contracts.AuthDto;
+using Chelle.Application.Contracts.RequestDTOs;
 using Chelle.Application.Services;
 using Chelle.Infrastructure.Auth;
 using Microsoft.Extensions.Options;
@@ -16,14 +17,14 @@ public class TokenService : ITokenService
     {
         _jwtSettings = jwtSettings.Value;
     }
-    public Task<string> GenerateTokenAsync(TokenUserDto user)
+    public Task<string> GenerateTokenAsync(IdentityUserModel user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.NameId, user.UserId.ToString()),
             new(JwtRegisteredClaimNames.Name, $"{user.FirstName} {user.LastName}"),
             new(ClaimTypes.Role, user.Role),
             new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)

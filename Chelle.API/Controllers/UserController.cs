@@ -20,59 +20,28 @@ public class UserController : ControllerBase
   public async Task<IActionResult> GetUserByPhone(string phoneNumber)
   {
     var result = await _userService.GetUserByPhoneAsync(phoneNumber);
-    return result.ToActionResult();
+    return result.ToActionBadRequestResult();
   }
 
 
   [HttpGet("{id:int}")]
   public async Task<IActionResult> GetUserById(int id)
   {
-    try
-    {
-      var user = await _userService.GetUserByIdAsync(id);
-      return Ok(user);
-    }
-    catch (KeyNotFoundException)
-    {
-      return NotFound();
-    }
+    var result = await _userService.GetUserByIdAsync(id);
+    return result.ToActionNotFoundResult();
   }
 
   [HttpGet]
   public async Task<IActionResult> GetAllUsers()
   {
-    var users = await _userService.GetAllUsersAsync();
-    return Ok(users);
+    var result = await _userService.GetAllUsersAsync();
+    return result.ToActionBadRequestResult();
   }
 
-  // [HttpPost]
-  // public async Task<IActionResult> AddUser([FromBody] AppUser user)
-  // {
-  //   if (user == null)
-  //   {
-  //     return BadRequest("AppUser cannot be null.");
-  //   }
-
-  //   var createdUser = await _userService(user.ToUserDomain());
-  //   return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
-  // }
-
-  [HttpPut("{id}")]
-  public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserRequest user)
+  [HttpPut]
+  public async Task<IActionResult> UpdateUser(UpdateUserRequest user)
   {
-    if (user == null || user.Id != id)
-    {
-      return BadRequest("Invalid user data.");
-    }
-
-    try
-    {
-      var updatedUser = await _userService.UpdateUserAsync(user);
-      return Ok(updatedUser);
-    }
-    catch (KeyNotFoundException)
-    {
-      return NotFound();
-    }
+    var result = await _userService.UpdateUserAsync(user);
+    return result.ToActionBadRequestResult();
   }
 }
