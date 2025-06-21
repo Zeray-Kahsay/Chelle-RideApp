@@ -9,13 +9,15 @@ import { AuthProvider } from "./context/AuthProvider.tsx";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-  <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-    <QueryClientProvider client={queryClient}>
-      <StrictMode>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </StrictMode>
-    </QueryClientProvider>
-  </GoogleOAuthProvider>
+  <StrictMode>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <QueryClientProvider client={queryClient}>
+        <StrictMode>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </StrictMode>
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
+  </StrictMode>
 );
