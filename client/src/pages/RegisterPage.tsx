@@ -1,14 +1,10 @@
-import RoleSelection from "../componenets/Register/RoleSelection";
-import RegisterationForm from "../componenets/RegistrationForm"
+import { Outlet } from "react-router-dom";
 
 const RegisterPage = () => (
-    <div>
-        <h2 className="bg-indigo-600 text-white">Register</h2>
-        <RegisterationForm />
-        <RoleSelection />
-    </div>
-)
+  <div>
+    <h2 className="bg-indigo-600 text-white">Register</h2>
+    <Outlet />
+  </div>
+);
 
 export default RegisterPage;
-
-

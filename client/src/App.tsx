@@ -1,16 +1,12 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import RegisterPage from "./pages/RegisterPage";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <BrowserRouter>
+    <div>
       <h1>Welcome to ON-TIME -- Arrive ON TIME </h1>
-      <Routes>
-        <Route path="/" element={<RegisterPage />} />
-      </Routes>
-    </BrowserRouter>
-  )
-
+      <Outlet />
+    </div>
+  );
 }
 
 export default App;
