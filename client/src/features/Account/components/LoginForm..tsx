@@ -1,8 +1,8 @@
-import { useLogin } from "../../hooks/useLogin";
-import type { LoginFormInput } from "../../types/LoginUserRequest";
+import { useLogin } from "../hooks/useLogin";
+import type { LoginFormInput } from "../types/LoginUserRequest";
 import { useForm } from "react-hook-form";
 
-const Login = () => {
+const LoginForm = () => {
   const {
     register,
     handleSubmit,
@@ -16,10 +16,14 @@ const Login = () => {
   };
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-lg bg-white">
-      <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-center tracking-wider">
+        Login
+      </h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Phone Number</label>
+          <label className="block text-sm font-medium mb-1 tracking-wider">
+            Phone Number
+          </label>
           <input
             type="tel"
             {...register("phoneNumber", {
@@ -33,7 +37,9 @@ const Login = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Password</label>
+          <label className="block text-sm font-medium mb-1 tracking-wider">
+            Password
+          </label>
           <input
             type="password"
             {...register("password", { required: "Password is required" })}
@@ -48,11 +54,11 @@ const Login = () => {
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
         >
-          {loginMutation.isPending ? "Logging in..." : "Login"}
+          {loginMutation.isPending ? "Logging in..." : "LoginForm"}
         </button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default LoginForm;

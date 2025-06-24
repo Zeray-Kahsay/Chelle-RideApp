@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-const VerifyPhone = () => {
+const VerifyPhoneForm = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const [code, setCode] = useState("");
@@ -53,4 +53,4 @@ const VerifyPhone = () => {
   );
 };
 
-export default VerifyPhone;
+export default VerifyPhoneForm;

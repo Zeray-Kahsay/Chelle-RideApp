@@ -1,12 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import RegisterPage from "../pages/RegisterPage";
-import RegisterCustomer from "../componenets/Account/Register/RegisterCustomer";
-import RegisterDriverStep1 from "../componenets/Account/Register/RegisterDriverStep1";
-import RegisterDriverStep2 from "../componenets/Account/Register/RegisterDriverStep2";
-import RoleSelection from "../componenets/Account/Register/RoleSelection";
-import HomePage from "../pages/HomePage";
-import Login from "../componenets/Account/Login";
+import RegisterPage from "../features/Account/pages/RegisterPage";
+import HomePage from "../features/Account/pages/HomePage";
+import LoginForm from "../features/Account/components/LoginForm.";
+import RoleSelectionForm from "../features/Account/components/RoleSelectionForm";
+import RegisterDriverFormStep1 from "../features/Account/components/RegisterDriverFormStep1";
+import RegisterDriverFormStep2 from "../features/Account/components/RegisterDriverFormStep2";
+import RegisterCustomerPage from "../features/Account/pages/RegisterCustomerPage";
 
 export const router = createBrowserRouter([
   {
@@ -14,18 +14,18 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "login", element: <Login /> },
+      { path: "login", element: <LoginForm /> },
       {
         path: "register",
         element: <RegisterPage />,
         children: [
-          { path: "role-selection", element: <RoleSelection /> },
+          { path: "role-selection", element: <RoleSelectionForm /> },
           {
             path: "customer",
-            element: <RegisterCustomer />,
+            element: <RegisterCustomerPage />,
           },
-          { path: "driver-step1", element: <RegisterDriverStep1 /> },
-          { path: "driver-step2", element: <RegisterDriverStep2 /> },
+          { path: "driver-step1", element: <RegisterDriverFormStep1 /> },
+          { path: "driver-step2", element: <RegisterDriverFormStep2 /> },
         ],
       },
     ],
