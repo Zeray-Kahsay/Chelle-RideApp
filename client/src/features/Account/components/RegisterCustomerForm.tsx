@@ -1,16 +1,34 @@
 import { useForm } from "react-hook-form";
-import type { RegisterCustomerRequest } from "../types/RegisterCustomerRequest";
+import { useEffect, useState } from "react";
+import { detectCountryPhoneCode } from "../utils/detectCountryPhoneCode";
+import { getDialCodeFromCountry } from "../utils/CountryCodeUtils";
+import type { RegisterCustomerFormData } from "../types/RegisterCustomerFormData";
 
 interface Props {
-  onSubmit: (data: RegisterCustomerRequest) => void;
+  onSubmit: (data: RegisterCustomerFormData) => void;
 }
 
 export const RegisterCustomerForm = ({ onSubmit }: Props) => {
+  const [defaultDialCode, setDefaultDialCode] = useState("+251");
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm<RegisterCustomerRequest>();
+  } = useForm<RegisterCustomerFormData>();
+
+  // Detect country phone code on mount
+  useEffect(() => {
+    const detect = async () => {
+      const code = await detectCountryPhoneCode();
+      if (code) {
+        const dial = getDialCodeFromCountry(code);
+        setDefaultDialCode(dial);
+        setValue("countryCode", dial); // Set hidden input
+      }
+    };
+    detect();
+  }, [setValue]);
 
   return (
     <form
@@ -20,6 +38,11 @@ export const RegisterCustomerForm = ({ onSubmit }: Props) => {
       <h2 className="text-xl font-bold mb-4 tracking-wider text-blue-300">
         Customer Registration
       </h2>
+      <input
+        {...register("countryCode")}
+        value={defaultDialCode}
+        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
 
       <input
         {...register("phoneNumber", { required: "Phone number is required" })}
