@@ -1,4 +1,4 @@
-export interface LoginFormInput {
+export type LoginRequest = {
   phoneNumber: string;
   password: string;
-}
+};

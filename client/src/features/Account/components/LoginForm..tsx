@@ -1,19 +1,17 @@
-import { useLogin } from "../hooks/useLogin";
-import type { LoginFormInput } from "../types/LoginUserRequest";
 import { useForm } from "react-hook-form";
+import type { LoginRequest } from "../types/LoginRequest";
 
-const LoginForm = () => {
+type LoginFormProps = {
+  onSubmit: (data: LoginRequest) => void;
+};
+
+const LoginForm = ({ onSubmit }: LoginFormProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormInput>();
+  } = useForm<LoginRequest>();
 
-  const loginMutation = useLogin();
-
-  const onSubmit = (data: LoginFormInput) => {
-    loginMutation.mutate(data);
-  };
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-lg bg-white">
       <h2 className="text-2xl font-semibold mb-6 text-center tracking-wider">
@@ -52,9 +50,9 @@ const LoginForm = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 tracking-widest"
         >
-          {loginMutation.isPending ? "Logging in..." : "LoginForm"}
+          Login
         </button>
       </form>
     </div>
